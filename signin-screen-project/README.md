@@ -1,56 +1,97 @@
-# Welcome to your Expo app 👋
+# Sign In Screen
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A React Native sign-in screen built with [Expo](https://expo.dev) and [Expo Router](https://docs.expo.dev/router/introduction/). It demonstrates a centered layout with branded header, email and password fields, primary action, social sign-in shortcuts, and footer links.
 
-## Get started
+## Preview
 
-1. Install dependencies
+Save captures under [`docs/screenshots/`](docs/screenshots/) using the filenames below, or change the paths in the image markdown to match your files.
 
-   ```bash
-   npm install
-   ```
+### iOS
 
-2. Start the app
+<!-- Add or replace: docs/screenshots/ios-signin.png -->
 
-   ```bash
-   npx expo start
-   ```
+![Sign in screen — iOS](docs/screenshots/ios-signin.png)
 
-In the output, you'll find options to open the app in a
+### Android
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+<!-- Add or replace: docs/screenshots/android-signin.png -->
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+![Sign in screen — Android](docs/screenshots/android-signin.png)
 
-## Get a fresh project
+### Web (optional)
 
-When you're ready, run:
+<!-- Add or replace: docs/screenshots/web-signin.png -->
+
+![Sign in screen — web](docs/screenshots/web-signin.png)
+
+## Features
+
+- **Safe area & keyboard** — `SafeAreaView` and `KeyboardAvoidingView` so the form stays usable with the keyboard open on iOS and Android.
+- **Form fields** — Email and password inputs with icons (`@expo/vector-icons`).
+- **Primary action** — Sign In button with arrow affordance.
+- **Social row** — Placeholder buttons for Facebook, Google, and Instagram.
+- **Footer** — Sign Up (styled link) and Forgot your password text.
+
+## Tech stack
+
+- [Expo SDK 55](https://docs.expo.dev/)
+- [Expo Router](https://docs.expo.dev/router/introduction/) (file-based routing)
+- React 19 / React Native 0.83
+- TypeScript
+
+## Prerequisites
+
+- [Node.js](https://nodejs.org/) (LTS recommended)
+- [npm](https://www.npmjs.com/) (ships with Node)
+- For physical devices: [Expo Go](https://expo.dev/go) or a dev build
+- For simulators: Xcode (iOS) and/or Android Studio (Android)
+
+## Getting started
+
+Install dependencies:
 
 ```bash
-npm run reset-project
+npm install
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+Start the development server:
 
-### Other setup steps
+```bash
+npm start
+```
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+Then press **i** (iOS simulator), **a** (Android emulator), or scan the QR code with Expo Go. For web:
+
+```bash
+npm run web
+```
+
+Other scripts:
+
+| Command           | Description              |
+| ----------------- | ------------------------ |
+| `npm run ios`     | Start with iOS focus     |
+| `npm run android` | Start with Android focus |
+| `npm run lint`    | Run Expo lint            |
+
+## Project structure
+
+```
+signin-screen-project/
+├── app.json
+├── package.json
+├── docs/
+│   └── screenshots/       # README preview images (optional)
+├── src/
+│   └── app/
+│       ├── _layout.tsx    # Root layout
+│       └── index.tsx      # Sign-in screen
+└── assets/                # Images and app icons
+```
+
+The main UI lives in `src/app/index.tsx`.
 
 ## Learn more
 
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+- [Expo documentation](https://docs.expo.dev/)
+- [React Native documentation](https://reactnative.dev/docs/getting-started)
