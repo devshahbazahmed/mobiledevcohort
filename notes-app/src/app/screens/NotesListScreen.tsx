@@ -12,37 +12,29 @@ import {
 } from "react-native";
 
 import NoteCard from "../components/NoteCard";
-import { darkTheme, lightTheme } from "../../lib/theme";
-import type { Note } from "../../lib/types";
+import { initialNotes } from "../data/notes";
+import { darkTheme, lightTheme } from "../styles/theme";
 
-interface NotesListScreenProps {
-  notes: Note[];
-  onSelectNote: (note: Note) => void;
-}
-
-export default function NotesListScreen({
-  notes,
-  onSelectNote,
-}: NotesListScreenProps) {
+export default function NotesListScreen({ notes }: { notes }) {
   const systemTheme = useColorScheme();
 
   const { width } = useWindowDimensions();
 
-  const [search, setSearch] = useState("");
   const [darkMode, setDarkMode] = useState(systemTheme === "dark");
+
+  const [search, setSearch] = useState<string>("");
 
   const theme = darkMode ? darkTheme : lightTheme;
 
   const isTablet = width >= 768;
 
   const filteredNotes = useMemo(() => {
-    const q = search.toLowerCase();
-    return notes.filter(
+    return initialNotes.filter(
       (note) =>
-        note.title.toLowerCase().includes(q) ||
-        note.content.toLowerCase().includes(q)
+        note.title.toLowerCase().includes(search.toLowerCase()) ||
+        note.content.toLowerCase().includes(search.toLowerCase())
     );
-  }, [search, notes]);
+  }, [search]);
 
   return (
     <View
@@ -113,12 +105,7 @@ export default function NotesListScreen({
         data={filteredNotes}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <NoteCard
-            note={item}
-            theme={theme}
-            isTablet={isTablet}
-            onPress={() => onSelectNote(item)}
-          />
+          <NoteCard item={item} theme={theme} isTablet={isTablet} />
         )}
         numColumns={isTablet ? 2 : 1}
         columnWrapperStyle={
@@ -136,8 +123,8 @@ export default function NotesListScreen({
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     padding: 20,
+    minHeight: 800,
   },
 
   header: {
