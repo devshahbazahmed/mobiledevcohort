@@ -160,6 +160,7 @@ const HomeScreen = () => {
           placeholderTextColor="#737987"
           value={search}
           onChangeText={setSearch}
+          onFocus={() => navigation.navigate('Search')}
         />
       </View>
 
