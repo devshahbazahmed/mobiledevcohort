@@ -82,11 +82,11 @@ export default function OnboardingScreen() {
           </View>
 
           {/* Pagination */}
-          {/* <View style={styles.pagination}>
+          <View style={styles.pagination}>
             <View style={styles.activeDot} />
             <View style={styles.dot} />
             <View style={styles.dot} />
-          </View> */}
+          </View>
         </View>
       </SafeAreaView>
     </ImageBackground>

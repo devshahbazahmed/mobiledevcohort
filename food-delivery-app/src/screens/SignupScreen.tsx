@@ -19,61 +19,96 @@ import SvgUri from 'expo-svg-uri';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import Feather from '@expo/vector-icons/Feather';
 import Button from '../components/ui/Button';
-import { LoginResponse } from '../types/auth';
+import { RegisterResponse } from '../types/auth';
 
-const LOGIN_URL = 'https://api.freeapi.app/api/v1/users/login';
+const REGISTER_URL = 'https://api.freeapi.app/api/v1/users/register';
 
-const LoginScreen = () => {
+const SignupScreen = () => {
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
+  const [email, setEmail] = useState<string>('');
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [confirmPassword, setConfirmPassword] = useState<string>('');
   const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
+  const [successMessage, setSuccessMessage] = useState<string>('');
 
-  const handleLogin = async () => {
+  const clearMessages = () => {
+    setErrorMessage('');
+    setSuccessMessage('');
+  };
+
+  const handleSignup = async () => {
+    const trimmedEmail = email.trim();
     const trimmedUsername = username.trim();
 
-    if (!trimmedUsername || !password.trim()) {
-      setErrorMessage('Please enter your username and password.');
+    if (!trimmedEmail || !trimmedUsername || !password || !confirmPassword) {
+      setErrorMessage('Please fill in all fields.');
+      return;
+    }
+
+    if (!trimmedEmail.includes('@')) {
+      setErrorMessage('Please enter a valid email address.');
+      return;
+    }
+
+    if (password.length < 6) {
+      setErrorMessage('Password must be at least 6 characters.');
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setErrorMessage('Passwords do not match.');
       return;
     }
 
     setIsLoading(true);
     setErrorMessage('');
+    setSuccessMessage('');
 
     try {
-      const response = await fetch(LOGIN_URL, {
+      const response = await fetch(REGISTER_URL, {
         method: 'POST',
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          username: trimmedUsername,
+          email: trimmedEmail,
           password,
+          role: 'USER',
+          username: trimmedUsername,
         }),
       });
 
-      const result = (await response.json()) as LoginResponse;
+      const result = (await response.json()) as RegisterResponse;
 
       if (!response.ok || !result.success) {
-        throw new Error(result.message || 'Unable to login. Please try again.');
+        throw new Error(
+          result.message || 'Unable to create your account. Please try again.'
+        );
       }
 
-      navigation.reset({
-        index: 0,
-        routes: [{ name: 'Home' }],
-      });
+      setSuccessMessage(result.message || 'Account created successfully.');
     } catch (error) {
       setErrorMessage(
         error instanceof Error
           ? error.message
-          : 'Unable to login. Please try again.'
+          : 'Unable to create your account. Please try again.'
       );
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handlePrimaryPress = () => {
+    if (successMessage) {
+      navigation.navigate('Login');
+      return;
+    }
+
+    handleSignup();
   };
 
   return (
@@ -87,19 +122,45 @@ const LoginScreen = () => {
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
-          {/* Logo Section */}
           <View style={styles.logo}>
             <SvgUri
-              width={112}
-              height={112}
+              width={92}
+              height={92}
               source={require('../../assets/svg/logo.svg')}
             />
             <Text style={styles.logoText}>Crave</Text>
-            <Text style={styles.subtitle}>Welcome back to fresh cravings.</Text>
+            <Text style={styles.subtitle}>
+              Create your food delivery account.
+            </Text>
           </View>
 
           <View style={styles.form}>
-            {/* Username Input */}
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Email address</Text>
+              <View style={styles.inputWrapper}>
+                <FontAwesome6
+                  name="envelope"
+                  size={18}
+                  color="#D9480F"
+                  style={styles.inputIcon}
+                />
+                <TextInput
+                  placeholder="Enter your email"
+                  placeholderTextColor="#9CA3AF"
+                  style={styles.input}
+                  value={email}
+                  onChangeText={(value) => {
+                    setEmail(value);
+                    clearMessages();
+                  }}
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  keyboardType="email-address"
+                  textContentType="emailAddress"
+                />
+              </View>
+            </View>
+
             <View style={styles.inputGroup}>
               <Text style={styles.label}>Username</Text>
               <View style={styles.inputWrapper}>
@@ -110,13 +171,13 @@ const LoginScreen = () => {
                   style={styles.inputIcon}
                 />
                 <TextInput
-                  placeholder="Enter your username"
+                  placeholder="Choose a username"
                   placeholderTextColor="#9CA3AF"
                   style={styles.input}
                   value={username}
                   onChangeText={(value) => {
                     setUsername(value);
-                    setErrorMessage('');
+                    clearMessages();
                   }}
                   autoCapitalize="none"
                   autoCorrect={false}
@@ -125,7 +186,6 @@ const LoginScreen = () => {
               </View>
             </View>
 
-            {/* Password Input */}
             <View style={styles.inputGroup}>
               <Text style={styles.label}>Password</Text>
               <View style={styles.inputWrapper}>
@@ -136,18 +196,17 @@ const LoginScreen = () => {
                   style={styles.inputIcon}
                 />
                 <TextInput
-                  placeholder="Enter your password"
+                  placeholder="Create a password"
                   placeholderTextColor="#9CA3AF"
                   style={[styles.input, styles.passwordInput]}
                   value={password}
                   onChangeText={(value) => {
                     setPassword(value);
-                    setErrorMessage('');
+                    clearMessages();
                   }}
                   secureTextEntry={!isPasswordVisible}
-                  textContentType="password"
+                  textContentType="newPassword"
                 />
-
                 <TouchableOpacity
                   activeOpacity={0.7}
                   onPress={() => setIsPasswordVisible(!isPasswordVisible)}
@@ -162,31 +221,60 @@ const LoginScreen = () => {
               </View>
             </View>
 
-            <TouchableOpacity activeOpacity={0.7} style={styles.forgotButton}>
-              <Text style={styles.forgotText}>Forgot password?</Text>
-            </TouchableOpacity>
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Confirm password</Text>
+              <View style={styles.inputWrapper}>
+                <Feather
+                  name="shield"
+                  size={20}
+                  color="#D9480F"
+                  style={styles.inputIcon}
+                />
+                <TextInput
+                  placeholder="Confirm your password"
+                  placeholderTextColor="#9CA3AF"
+                  style={styles.input}
+                  value={confirmPassword}
+                  onChangeText={(value) => {
+                    setConfirmPassword(value);
+                    clearMessages();
+                  }}
+                  secureTextEntry={!isPasswordVisible}
+                  textContentType="newPassword"
+                />
+              </View>
+            </View>
 
             {errorMessage ? (
               <Text style={styles.errorText}>{errorMessage}</Text>
             ) : null}
 
-            {/* Login Button */}
+            {successMessage ? (
+              <Text style={styles.successText}>{successMessage}</Text>
+            ) : null}
+
             <Button
               icon={false}
               fontSize={20}
-              onPress={handleLogin}
-              text={isLoading ? 'Logging in...' : 'Login'}
+              onPress={handlePrimaryPress}
+              text={
+                successMessage
+                  ? 'Go to login'
+                  : isLoading
+                    ? 'Creating account...'
+                    : 'Create account'
+              }
               disabled={isLoading}
             />
           </View>
 
-          <View style={styles.signUpRow}>
-            <Text style={styles.signUpText}>New to Crave? </Text>
+          <View style={styles.loginRow}>
+            <Text style={styles.loginText}>Already have an account? </Text>
             <TouchableOpacity
               activeOpacity={0.7}
-              onPress={() => navigation.navigate('Signup')}
+              onPress={() => navigation.navigate('Login')}
             >
-              <Text style={styles.signUpLink}>Create account</Text>
+              <Text style={styles.loginLink}>Log in</Text>
             </TouchableOpacity>
           </View>
         </ScrollView>
@@ -195,7 +283,7 @@ const LoginScreen = () => {
   );
 };
 
-export default LoginScreen;
+export default SignupScreen;
 
 const styles = StyleSheet.create({
   container: {
@@ -211,23 +299,23 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: 'center',
     paddingHorizontal: 24,
-    paddingVertical: 36,
+    paddingVertical: 30,
   },
 
   logo: {
     alignItems: 'center',
-    marginBottom: 34,
+    marginBottom: 18,
   },
 
   logoText: {
-    fontSize: 42,
+    fontSize: 38,
     fontWeight: '700',
     color: '#D9480F',
     marginTop: -8,
   },
 
   subtitle: {
-    marginTop: 8,
+    marginTop: 6,
     color: '#6B7280',
     fontSize: 16,
     textAlign: 'center',
@@ -240,7 +328,7 @@ const styles = StyleSheet.create({
   },
 
   inputGroup: {
-    marginTop: 18,
+    marginTop: 14,
   },
 
   label: {
@@ -255,7 +343,7 @@ const styles = StyleSheet.create({
   },
 
   input: {
-    minHeight: 58,
+    minHeight: 56,
     borderColor: '#F0D8C8',
     borderWidth: 1,
     borderRadius: 18,
@@ -293,17 +381,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 
-  forgotButton: {
-    alignSelf: 'flex-end',
-    marginTop: 14,
-  },
-
-  forgotText: {
-    color: '#D9480F',
-    fontSize: 15,
-    fontWeight: '700',
-  },
-
   errorText: {
     marginTop: 18,
     color: '#B42318',
@@ -313,19 +390,28 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 
-  signUpRow: {
+  successText: {
+    marginTop: 18,
+    color: '#067647',
+    fontSize: 14,
+    fontWeight: '600',
+    lineHeight: 20,
+    textAlign: 'center',
+  },
+
+  loginRow: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 28,
+    marginTop: 26,
   },
 
-  signUpText: {
+  loginText: {
     color: '#6B7280',
     fontSize: 16,
   },
 
-  signUpLink: {
+  loginLink: {
     color: '#D9480F',
     fontSize: 16,
     fontWeight: '700',

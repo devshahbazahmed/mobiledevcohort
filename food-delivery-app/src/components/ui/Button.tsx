@@ -7,16 +7,19 @@ const Button = ({
   icon,
   onPress,
   fontSize,
+  disabled = false,
 }: {
   text: string;
   icon: boolean;
   onPress: () => void;
   fontSize: number;
+  disabled?: boolean;
 }) => {
   return (
     <TouchableOpacity
       activeOpacity={0.8}
-      style={styles.button}
+      disabled={disabled}
+      style={[styles.button, disabled && styles.disabledButton]}
       onPress={onPress}
     >
       <Text style={[styles.buttonText, { fontSize: fontSize }]}>{text}</Text>
@@ -29,7 +32,7 @@ const Button = ({
           style={{ marginLeft: 10 }}
         />
       ) : (
-        ''
+        null
       )}
     </TouchableOpacity>
   );
@@ -60,5 +63,9 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#fff',
     fontWeight: '700',
+  },
+
+  disabledButton: {
+    opacity: 0.65,
   },
 });
