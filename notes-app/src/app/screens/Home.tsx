@@ -10,6 +10,41 @@ import {
 } from 'react-native';
 import { themeTypes } from '../types/themeTypes';
 
+const notes = [
+  {
+    id: 1,
+    title: 'Go to gym',
+    description: 'Exercise for 1 hour',
+    isCompleted: false,
+  },
+  {
+    id: 2,
+    title: 'Buy groceries',
+    description:
+      'Make the list of required items and buy them from grocery store',
+    isCompleted: false,
+  },
+  {
+    id: 3,
+    title: 'Prepare breakfast',
+    description: 'Prepare and complete breakfast on time',
+    isCompleted: false,
+  },
+  {
+    id: 4,
+    title: 'Start new Project',
+    description:
+      'Start a new project with all the assets required and complete it as much as possible',
+    isCompleted: false,
+  },
+  {
+    id: 5,
+    title: 'Read a blog',
+    description: 'Read a blog on AI',
+    isCompleted: false,
+  },
+];
+
 const Home = ({
   themes,
   isDark,
@@ -49,7 +84,7 @@ const Home = ({
           ]}
           value={value}
           onChangeText={setValue}
-          placeholderTextColor="#464554"
+          placeholderTextColor={theme.text}
           editable={true}
         />
         <Fontisto
