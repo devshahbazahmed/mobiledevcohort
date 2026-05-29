@@ -1,23 +1,39 @@
 import Fontisto from '@expo/vector-icons/Fontisto';
-import React, { useState } from 'react';
+import React from 'react';
 import { StyleSheet, TextInput, View } from 'react-native';
+import { useTheme } from '../context/ThemeContext';
 
-const Search = () => {
-  const [value, setValue] = useState<string>('');
+const Search = ({
+  value,
+  onChange,
+}: {
+  value: string;
+  onChange: (text: string) => void;
+}) => {
+  const { theme } = useTheme();
+
   return (
-    <View style={styles.searchbar}>
+    <View
+      style={[styles.searchbar, { backgroundColor: theme.colors.background }]}
+    >
       <TextInput
         placeholder="Search"
-        style={styles.input}
+        style={[
+          styles.input,
+          {
+            backgroundColor: theme.colors.background,
+            color: theme.colors.text,
+          },
+        ]}
         value={value}
-        onChangeText={setValue}
+        onChangeText={onChange}
         placeholderTextColor="#464554"
         editable={true}
       />
       <Fontisto
         name="search"
         size={24}
-        color="#464554"
+        color={theme.colors.text}
         style={{
           position: 'absolute',
           left: '8%',
@@ -37,7 +53,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   input: {
-    color: '#464554',
     fontSize: 15,
     height: 60,
     borderWidth: 1,
@@ -47,7 +62,6 @@ const styles = StyleSheet.create({
     borderColor: '#C7C4D7',
     borderRadius: 50,
     marginInline: 15,
-    backgroundColor: '#EFF4FF',
     width: '90%',
     position: 'relative',
   },
