@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { Gyroscope } from 'expo-sensors';
+import { useState, useEffect } from "react";
+import { Gyroscope } from "expo-sensors";
 
 export function useGyroscope() {
   const [available, setAvailable] = useState<boolean | null>(null);
@@ -24,13 +24,10 @@ export function useGyroscope() {
       });
     })();
 
-    return () => subsciption?.remove();
+    return ()=> subsciption?.remove()
   }, []);
 
   return {
-    available,
-    x,
-    y,
-    z,
-  };
+    available , x , y , z
+  }
 }
