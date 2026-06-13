@@ -468,3 +468,5 @@ const HomeScreen = () => {
 export default HomeScreen;
 
 const styles = StyleSheet.create({}); -->
+
+<!-- npx expo install expo-audio expo-camera expo-battery expo-contacts expo-dev-client expo-device expo-document-picker expo-file-system expo-haptics expo-image expo-linking expo-location expo-media-library expo-network -->
