@@ -3,11 +3,6 @@ Mobile Development Cohort
 
 React Native
 
-Timeline
-Start: 20 Jun 2026, 1:00 pm
-Due: 4 Jul 2026, 11:59 pm
-Eval Begins: 5 Jul 2026, 12:30 am
-Eval Ends: 8 Jul 2026, 11:59 pm
 Instructions
 Build a mobile habit tracker app where users can create habits such as Drink Water, Code 1 Hour, Read, or Workout.
 
